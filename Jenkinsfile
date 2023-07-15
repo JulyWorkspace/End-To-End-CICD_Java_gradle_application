@@ -7,15 +7,15 @@ pipeline{
                 sh 'mvn -version'
             }
         }
-        stage(){
+        // stage(){
 
-        }
-        stage(){
+        // }
+        // stage(){
 
-        }
-        stage(){
+        // }
+        // stage(){
 
-        }
+        // }
 
     }
 }
