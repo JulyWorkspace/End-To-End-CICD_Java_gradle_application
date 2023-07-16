@@ -1,5 +1,8 @@
 pipeline{
     agent any
+    environment{
+        VERSION= "${env.BUILD_ID}"
+    }
     stages{
         stage("checking version"){
             steps{
@@ -24,9 +27,21 @@ pipeline{
             }
 
         }
-        // stage(){
-
-        // }
+        stage('docker build and docker push'){
+            steps{
+                script{
+                    withCredentials([string(credentialsId: 'docker-nexus-pass', variable: 'docker_nexus_pass')]) {
+                        sh '''
+                            docker build -t 3.110.25.136:8083/springapp:${VERSION} .
+                            docker login -u admin -p $docker_nexus_pass 3.110.25.136:8083
+                            docker push 3.110.25.136:8083/springapp:${VERSION}
+                            docker rmi 3.110.25.136:8083/springapp:${VERSION}
+                            
+                        '''
+                    }
+                }
+            }
+        }
         // stage(){
 
         // }
