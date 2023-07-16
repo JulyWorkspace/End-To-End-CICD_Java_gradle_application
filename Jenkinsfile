@@ -26,13 +26,12 @@ pipeline{
                 }
             }
 
-        }
+        } 
         stage('docker build and docker push'){
             steps{
                 script{
                         sh '''
                             sudo docker build -t 3.110.25.136:8083/springapp:${VERSION} .
-                            sudo docker login -u admin -p gaurav 3.110.25.136:8083
                             sudo docker push 3.110.25.136:8083/springapp:${VERSION}
                             sudo docker rmi 3.110.25.136:8083/springapp:${VERSION}
                             
