@@ -11,7 +11,8 @@ pipeline{
             steps{
                 script{
                     withSonarQubeEnv(credentialsId: 'sonartoken') {
-                        sh 'mvn build sonar:sonar'
+                        sh 'chmod +x gradlew'
+                        sh './gradlew sonarqube'
                     }
                 }
             }
