@@ -38,7 +38,7 @@ pipeline{
                             sudo docker rmi 3.110.25.136:8083/springapp:${VERSION}
                             
                         '''
-                    }
+                    //}
                 }
             }
         }
