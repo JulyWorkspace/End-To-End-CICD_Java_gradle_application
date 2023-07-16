@@ -7,9 +7,16 @@ pipeline{
                 sh 'mvn -version'
             }
         }
-        // stage(){
+        stage('code qaulity'){
+            steps{
+                script{
+                    withSonarQubeEnv(credentialsId: 'sonartoken') {
+                        sh 'mvn build sonarqube'
+                    }
+                }
+            }
 
-        // }
+        }
         // stage(){
 
         // }
