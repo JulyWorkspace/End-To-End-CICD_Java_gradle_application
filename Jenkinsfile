@@ -32,10 +32,10 @@ pipeline{
                 script{
                     withCredentials([string(credentialsId: 'nexus-docker-passwd', variable: 'passwd')]) {
                          sh '''
-                            docker build -t 3.110.25.136:8083/springapp:${VERSION} .
-                            docker login -u admin -p $passwd 3.110.25.136:8083
-                            docker push 3.110.25.136:8083/springapp:${VERSION}
-                            docker rmi 3.110.25.136:8083/springapp:${VERSION}
+                            docker build -t 15.207.101.233:8083/springapp:${VERSION} .
+                            docker login -u admin -p $passwd 15.207.101.233:8083
+                            docker push 15.207.101.233:8083/springapp:${VERSION}
+                            docker rmi 15.207.101.233:8083/springapp:${VERSION}
                             
                         '''
                     }
