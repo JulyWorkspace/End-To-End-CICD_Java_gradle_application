@@ -48,7 +48,7 @@ pipeline{
     }
      post {
          always {
-			mail bcc: '', body: "<br><b>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL} <br>Status: ${currentBuild.result}</b>", cc: '', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "${currentBuild.result} CI: Project name -> ${env.JOB_NAME}", to: "kunalumrane@gmail.com";  
+			mail bcc: '', body: "<br><b>Project: <h1 style="background-color:DodgerBlue;">${env.JOB_NAME} <br>Build Number: <p style="background-color:Tomato;">${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL} <br>Status: ${currentBuild.result}</b>", cc: '', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "${currentBuild.result} CI: Project name -> ${env.JOB_NAME}", to: "kunalumrane@gmail.com";  
 		 }
 	   }
 }
