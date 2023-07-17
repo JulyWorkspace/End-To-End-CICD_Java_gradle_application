@@ -4,13 +4,13 @@ pipeline{
         VERSION= "${env.BUILD_ID}"
     }
     stages{
-        stage("checking version"){
+        stage("Checking version"){
             steps{
                 sh 'java --version'
                 sh 'mvn -version'
             }
         }
-        stage('code qaulity'){
+        stage('Code Qaulity'){
             steps{
                 script{
                     withSonarQubeEnv(credentialsId: 'sonartoken') {
@@ -27,7 +27,7 @@ pipeline{
             }
 
         } 
-        stage('docker build and docker push'){
+        stage('Docker build and Docker push'){
             steps{
                 script{
                    withCredentials([string(credentialsId: 'docker-nexus-passwd', variable: 'passwd')]) {
@@ -41,7 +41,7 @@ pipeline{
                 }
             }
         }
-        stage('indentifying misconfigs using datree in helm charts'){
+        stage('Indentifying misconfigs using datree in helm charts'){
             steps{
                 script{
                     dir('kubernetes/') {
