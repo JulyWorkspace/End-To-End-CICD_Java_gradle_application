@@ -13,14 +13,14 @@ pipeline{
         stage('Code Qaulity'){
             steps{
                 script{
-                    withSonarQubeEnv(credentialsId: 'sonartoken') {
-                        sh 'chmod +x gradlew'
-                        sh './gradlew sonarqube'
-                    }
-                    timeout(time: 1, unit: 'HOURS') {
-                      def qg = waitForQualityGate()
-                      if (qg.status != 'OK') {
-                           error "Pipeline aborted due to quality gate failure: ${qg.status}"
+			withSonarQubeEnv(credentialsId: 'jenkins-sonar') {
+				sh 'chmod +x gradlew'
+                        	sh './gradlew sonarqube'
+			}
+			timeout(time: 1, unit: 'HOURS') {
+				def qg = waitForQualityGate()
+				if (qg.status != 'OK') {
+					error "Pipeline aborted due to quality gate failure: ${qg.status}"
                       }
                     }
                 }
@@ -30,13 +30,13 @@ pipeline{
         stage('Docker build and Docker push'){
             steps{
                 script{
-                   withCredentials([string(credentialsId: 'docker-nexus-passwd', variable: 'passwd')]) {
-                    sh '''
-                    docker build -t 15.207.101.233:8083/springapp:${VERSION} .
-                    docker login -u admin -p $passwd 15.207.101.233:8083
-                    docker push 15.207.101.233:8083/springapp:${VERSION}
-                    docker rmi 15.207.101.233:8083/springapp:${VERSION}
-                    '''
+			withCredentials([string(credentialsId: 'nexus-passwd', variable: 'passwd')]) {
+			sh '''
+	                    docker build -t 34.95.17.174:8083/springapp:${VERSION} .
+	                    docker login -u admin -p $passwd 34.95.17.174:8083
+	                    docker push 34.95.17.174:8083/springapp:${VERSION}
+	                    docker rmi 34.95.17.174:8083/springapp:${VERSION}
+	                '''
 		   }
                 }
             }
