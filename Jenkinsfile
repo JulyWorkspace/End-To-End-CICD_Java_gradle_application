@@ -13,14 +13,14 @@ pipeline{
         stage('Code Qaulity'){
             steps{
                 script{
-			withSonarQubeEnv(credentialsId: 'jenkins-sonar') {
-				sh 'chmod +x gradlew'
-                        	sh './gradlew sonarqube'
-			}
-			timeout(time: 1, unit: 'HOURS') {
-				def qg = waitForQualityGate()
-				if (qg.status != 'OK') {
-					error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                    withSonarQubeEnv(credentialsId: 'sonartoken') {
+                        sh 'chmod +x gradlew'
+                        sh './gradlew sonarqube'
+                    }
+                    timeout(time: 1, unit: 'HOURS') {
+                      def qg = waitForQualityGate()
+                      if (qg.status != 'OK') {
+                           error "Pipeline aborted due to quality gate failure: ${qg.status}"
                       }
                     }
                 }
@@ -30,30 +30,30 @@ pipeline{
         stage('Docker build and Docker push'){
             steps{
                 script{
-			withCredentials([string(credentialsId: 'nexus-passwd', variable: 'passwd')]) {
-			sh '''
-	                    docker build -t 3.6.43.239:8083/springapp:${VERSION} .
-	                    docker login -u admin -p $passwd 3.6.43.239:8083
-	                    docker push 3.6.43.239:8083/springapp:${VERSION}
-	                    docker rmi 3.6.43.239:8083/springapp:${VERSION}
-	                '''
+                   withCredentials([string(credentialsId: 'docker-nexus-passwd', variable: 'passwd')]) {
+                    sh '''
+                    docker build -t 15.207.101.233:8083/springapp:${VERSION} .
+                    docker login -u admin -p $passwd 15.207.101.233:8083
+                    docker push 15.207.101.233:8083/springapp:${VERSION}
+                    docker rmi 15.207.101.233:8083/springapp:${VERSION}
+                    '''
 		   }
                 }
             }
         }
-        // stage('Indentifying misconfigs using datree in helm charts'){
-        //     steps{
-        //         script{
-        //             dir('kubernetes/') {
-        //                 withEnv(['DATREE_TOKEN=27aeb149-5cc2-4f61-a362-1e27fe99bd14']) {
-        //                     sh 'helm datree test myapp/'
-        //                 }
+        stage('Indentifying misconfigs using datree in helm charts'){
+            steps{
+                script{
+                    dir('kubernetes/') {
+                        withEnv(['DATREE_TOKEN=27aeb149-5cc2-4f61-a362-1e27fe99bd14']) {
+                            sh 'helm datree test myapp/'
+                        }
                         
-        //             }
-        //         }
-        //     }
+                    }
+                }
+            }
 
-        // }
+        }
          stage('Pushing the Helm Chatrs to Nexus'){
             steps{
                 script{
@@ -62,7 +62,7 @@ pipeline{
                         sh '''
                         helmversion=$(helm show chart myapp | grep version | cut -d: -f 2 | tr -d ' ')
                         tar -czvf myapp-${helmversion}.tgz myapp/
-                        curl -u admin:$passwd http://3.6.43.239:8081/repository/helm-hosted/ --upload-file myapp-${helmversion}.tgz -v
+                        curl -u admin:$passwd http://15.207.101.233:8081/repository/helm-hosted/ --upload-file myapp-${helmversion}.tgz -v
                         '''
                         }
                     }
