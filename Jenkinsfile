@@ -32,10 +32,10 @@ pipeline{
                 script{
                    withCredentials([string(credentialsId: 'docker-nexus-passwd', variable: 'passwd')]) {
                     sh '''
-                    docker build -t 15.207.101.233:8083/springapp:${VERSION} .
-                    docker login -u admin -p $passwd 15.207.101.233:8083
-                    docker push 15.207.101.233:8083/springapp:${VERSION}
-                    docker rmi 15.207.101.233:8083/springapp:${VERSION}
+                    docker build -t 3.6.43.239:8083/springapp:${VERSION} .
+                    docker login -u admin -p $passwd 3.6.43.239:8083
+                    docker push 3.6.43.239:8083/springapp:${VERSION}
+                    docker rmi 13.6.43.239:8083/springapp:${VERSION}
                     '''
 		   }
                 }
@@ -62,7 +62,7 @@ pipeline{
                         sh '''
                         helmversion=$(helm show chart myapp | grep version | cut -d: -f 2 | tr -d ' ')
                         tar -czvf myapp-${helmversion}.tgz myapp/
-                        curl -u admin:$passwd http://15.207.101.233:8081/repository/helm-hosted/ --upload-file myapp-${helmversion}.tgz -v
+                        curl -u admin:$passwd http://3.6.43.239:8081/repository/helm-hosted/ --upload-file myapp-${helmversion}.tgz -v
                         '''
                         }
                     }
